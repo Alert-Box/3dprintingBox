@@ -121,7 +121,7 @@ module ledDiffuser()
 {
     
     diffuserCentralHoleR=7.2/2;
-    diffuserCentralHoleR2=10/2;
+    diffuserCentralHoleR2=11/2;
     diffuserLedCompartmentDepth=2;
     diffuserWireChanelWidth=5.2;
     diffuserBaseX=buttonsAreaX-1-5-0.5;
