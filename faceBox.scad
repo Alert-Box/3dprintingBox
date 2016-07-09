@@ -117,9 +117,6 @@ module circuit1Plate()
 		}		
 }
 
-module ledDiffuser()
-{
-    
     diffuserCentralHoleR=7.2/2;
     diffuserCentralHoleR2=11/2;
     diffuserLedCompartmentDepth=2;
@@ -128,7 +125,9 @@ module ledDiffuser()
     diffuserBaseY=buttonsHoleRadius*2+buttonDecalY/2-1;
     diffuserBaseThickness=3;
     diffuserButtonCylinderZ=3;
-    
+
+module ledDiffuser()
+{
     translate([bezel4x20X-0.5,0,0])
 {
   
@@ -160,7 +159,33 @@ module ledDiffuser()
 
 }
 }
+module ledDiffuserBackPlate()
+{
+    translate([bezel4x20X-0.5,0,0])
+{
+  
+     
+        difference()
+        {
+        translate([2,pillarsWidth1+beamsThickness+0.5,diffuserButtonCylinderZ])
+        //#cube([buttonsAreaX-1-5,bezel4x20Y-pillarsWidth1*2-boxWallsThickness*2-1,boxWallsThickness*2]);
+    cube([diffuserBaseX,diffuserBaseY,diffuserBaseThickness]);      
+            
+            
+            
+    translate([buttonDecalX+1-diffuserCentralHoleR2-4,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1),boxWallsThickness-1])
+            cylinder(r=1.05,r2=1.1,h=diffuserLedCompartmentDepth*4,$fn=32);
+            
+    translate([buttonDecalX+1+diffuserCentralHoleR2+4,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1),boxWallsThickness-1])
+            cylinder(r=1.05,r2=1.1,h=diffuserLedCompartmentDepth*4,$fn=32);
+        
+    
+            //translate([buttonDecalX+1-7/2,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1)-7/2,boxWallsThickness*2])
+            //cube([7,7,boxWallsThickness+1]);
+        }
 
+}
+}
 
 
 module layersOddPillars(pillarsHeight=boxPart1Z)
@@ -536,8 +561,10 @@ module spacerLayer(layerHeight=6)
 
 //frontPanel();
 
-rotate([180,0,0])
-ledDiffuser();
+//rotate([180,0,0])
+//ledDiffuser();
+
+ledDiffuserBackPlate();
 
 //secondLayer();
 
