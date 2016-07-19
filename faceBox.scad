@@ -9,21 +9,23 @@ bezel4x20Y=80;
 boxWallsThickness=1.5;
 buttonsAreaX=30;
 
-buttonsHoleRadius=16.5/2;
+buttonsHoleRadius=16.5/2;         
 beamsThickness=3;
 
-boxPart1Z=25;
+boxPart1Z=27;
 boxPart2Z=25;
 boxPart3Z=25;
 screwHoles1Radius=3/2;
 pillarsWidth1=5;
 
+/*
 battBoxX=100;
 battBoxY=95;
 battBoxWallsThickness=1;
 
 battBoxWallsHeight=20;
 battBoxWalls2Height=30;
+*/
 
 fixationBeamsThickness=5;
 fixationBeamsHolesRadius=3/2;
@@ -42,10 +44,29 @@ circuit1ScrewPillarsH=5+beamsThickness;
 screwHolesRadius=2/2;
 padding=0.1;
 
+buttonPlatePillarsHeight=8;
+    
+
 nbButtons=3;
 buttonDecalX=(buttonsAreaX-beamsThickness*2-1)/2;
 buttonDecalY=(bezel4x20Y-beamsThickness*2-nbButtons*buttonsHoleRadius*2)/(nbButtons+1);
 echo (buttonDecalY);
+
+diffuserCentralHoleR=8/2;
+    diffuserCentralHoleR2=12/2;
+    diffuserLedCompartmentDepth=2;
+    diffuserWireChanelWidth=5.2;
+    diffuserBaseX=buttonsAreaX-1-5-0.5;
+    diffuserBaseY=buttonsHoleRadius*2+buttonDecalY/2-1;
+    diffuserBaseThickness=3;
+    diffuserButtonCylinderZ=3;
+
+    diffuserBackPlateFootX=5;
+    diffuserBackPlateFootY=diffuserBaseY;
+    diffuserBackPlateFootZ=6;
+
+
+
 
 
 module fixationPillar(pillarWidth=pillarsWidth1,pillarHeight=boxPart1Z,pillarScrewRadius=screwHoles1Radius)
@@ -117,14 +138,7 @@ module circuit1Plate()
 		}		
 }
 
-    diffuserCentralHoleR=7.2/2;
-    diffuserCentralHoleR2=11/2;
-    diffuserLedCompartmentDepth=2;
-    diffuserWireChanelWidth=5.2;
-    diffuserBaseX=buttonsAreaX-1-5-0.5;
-    diffuserBaseY=buttonsHoleRadius*2+buttonDecalY/2-1;
-    diffuserBaseThickness=3;
-    diffuserButtonCylinderZ=3;
+
 
 module ledDiffuser()
 {
@@ -161,28 +175,31 @@ module ledDiffuser()
 }
 module ledDiffuserBackPlate()
 {
+
     translate([bezel4x20X-0.5,0,0])
 {
   
      
         difference()
         {
-        translate([2,pillarsWidth1+beamsThickness+0.5,diffuserButtonCylinderZ])
+        translate([2,pillarsWidth1+beamsThickness+0.5,diffuserButtonCylinderZ+diffuserBaseThickness])
         //#cube([buttonsAreaX-1-5,bezel4x20Y-pillarsWidth1*2-boxWallsThickness*2-1,boxWallsThickness*2]);
     cube([diffuserBaseX,diffuserBaseY,diffuserBaseThickness]);      
             
             
             
-    translate([buttonDecalX+1-diffuserCentralHoleR2-4,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1),boxWallsThickness-1])
+    translate([buttonDecalX+1-diffuserCentralHoleR2-4,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1),boxWallsThickness+diffuserBaseThickness-1])
             cylinder(r=1.05,r2=1.1,h=diffuserLedCompartmentDepth*4,$fn=32);
             
-    translate([buttonDecalX+1+diffuserCentralHoleR2+4,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1),boxWallsThickness-1])
+    translate([buttonDecalX+1+diffuserCentralHoleR2+4,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1),boxWallsThickness+diffuserBaseThickness-1])
             cylinder(r=1.05,r2=1.1,h=diffuserLedCompartmentDepth*4,$fn=32);
         
     
             //translate([buttonDecalX+1-7/2,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1)-7/2,boxWallsThickness*2])
             //cube([7,7,boxWallsThickness+1]);
         }
+        translate([buttonDecalX+1-diffuserBackPlateFootX/2,beamsThickness+0.375-boxWallsThickness+buttonDecalY,boxWallsThickness+1.5+diffuserBaseThickness+diffuserBaseThickness])
+        cube([diffuserBackPlateFootX,diffuserBackPlateFootY,diffuserBackPlateFootZ]);
 
 }
 }
@@ -230,6 +247,27 @@ translate([bezel4x20X-0.5,0,0])
 
 layersOddPillars(boxPart1Z);
 
+
+
+//small pillars for buttons plate
+translate([-pillarsWidth1-1,0,0])  
+{
+translate([bezel4x20X+buttonsAreaX-pillarsWidth1-boxWallsThickness,bezel4x20Y-pillarsWidth1-boxWallsThickness,boxWallsThickness])    
+    fixationPillar(pillarHeight=buttonPlatePillarsHeight);
+
+translate([bezel4x20X+buttonsAreaX-pillarsWidth1-boxWallsThickness,boxWallsThickness,boxWallsThickness])    
+    fixationPillar(pillarHeight=buttonPlatePillarsHeight);
+}
+
+
+translate([-buttonsAreaX+pillarsWidth1+beamsThickness+1,0,0])  
+{
+translate([bezel4x20X+buttonsAreaX-pillarsWidth1-boxWallsThickness,bezel4x20Y-pillarsWidth1-boxWallsThickness,boxWallsThickness])    
+    fixationPillar(pillarHeight=buttonPlatePillarsHeight);
+
+translate([bezel4x20X+buttonsAreaX-pillarsWidth1-boxWallsThickness,boxWallsThickness,boxWallsThickness])    
+    fixationPillar(pillarHeight=buttonPlatePillarsHeight);
+}
 
 
 
@@ -558,13 +596,92 @@ module spacerLayer(layerHeight=6)
     
 }
 
+module buttonBackPlateCutout()
+{
+    cutoutEnlargement=1.5;
+    translate([bezel4x20X-0.5,0,0])
+        translate([buttonDecalX+1-diffuserBackPlateFootX/2-cutoutEnlargement/2,beamsThickness+0.375-boxWallsThickness+buttonDecalY-cutoutEnlargement/2,boxWallsThickness+1.5+diffuserBaseThickness+diffuserBaseThickness])
+        cube([diffuserBackPlateFootX+cutoutEnlargement,diffuserBackPlateFootY+cutoutEnlargement,diffuserBackPlateFootZ]);
+}
+
+
+module buttonsHolderPlate1()
+{
+    
+    
+    difference()
+    {
+    translate([bezel4x20X+1,boxWallsThickness+0.5,buttonPlatePillarsHeight+boxWallsThickness])
+    cube([buttonsAreaX-pillarsWidth1-3,bezel4x20Y-boxWallsThickness*2-1,3]);
+
+
+buttonBackPlateCutout();
+
+//translate([buttonDecalX+1-diffuserWireChanelWidth/2,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1)-diffuserBaseX/2,diffuserButtonCylinderZ+diffuserButtonCylinderZ-1]) 
+
+translate([0,diffuserBaseY+buttonDecalY/2+1,0]) 
+buttonBackPlateCutout();
+
+translate([0,diffuserBaseY*2+buttonDecalY+2,0]) 
+buttonBackPlateCutout();
+        
+translate([0,-diffuserBackPlateFootY-pillarsWidth1+1,0]) 
+buttonBackPlateCutout();
+        
+        
+        
+        translate([-pillarsWidth1-1,0,0])  
+{
+translate([bezel4x20X+buttonsAreaX-pillarsWidth1/2-boxWallsThickness,bezel4x20Y-pillarsWidth1/2-boxWallsThickness,boxWallsThickness])    
+    cylinder(r=screwHoles1Radius,h=25,$fn=10);
+    
+    translate([bezel4x20X+buttonsAreaX-pillarsWidth1/2-boxWallsThickness,boxWallsThickness+pillarsWidth1/2,boxWallsThickness])        
+    cylinder(r=screwHoles1Radius,h=25,$fn=10);
+}    
+
+translate([-buttonsAreaX+pillarsWidth1+beamsThickness+1,0,0])  
+{
+translate([bezel4x20X+buttonsAreaX-pillarsWidth1/2-boxWallsThickness,bezel4x20Y-pillarsWidth1/2-boxWallsThickness,boxWallsThickness])    
+    cylinder(r=screwHoles1Radius,h=25,$fn=10);
+
+translate([bezel4x20X+buttonsAreaX-pillarsWidth1/2-boxWallsThickness,boxWallsThickness+pillarsWidth1/2,boxWallsThickness])    
+    cylinder(r=screwHoles1Radius,h=25,$fn=10);
+}
+    
+    
+    
+    
+    
+    
+    }
+    
+}
+
+
 
 //frontPanel();
 
 //rotate([180,0,0])
-//ledDiffuser();
+ledDiffuser();
 
+/*translate([0,diffuserBaseY+buttonDecalY/2+1,0]) 
+ledDiffuser();
+
+translate([0,diffuserBaseY*2+buttonDecalY+2,0]) 
+ledDiffuser();
+*/
+
+//ledDiffuserBackPlate();
+
+//translate([buttonDecalX+1-diffuserWireChanelWidth/2,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1)-diffuserBaseX/2,diffuserButtonCylinderZ+diffuserButtonCylinderZ-1]) 
+/*
+translate([0,diffuserBaseY+buttonDecalY/2+1,0]) 
 ledDiffuserBackPlate();
+
+translate([0,diffuserBaseY*2+buttonDecalY+2,0]) 
+ledDiffuserBackPlate();
+
+buttonsHolderPlate1();*/
 
 //secondLayer();
 
