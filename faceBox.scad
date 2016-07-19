@@ -52,7 +52,7 @@ buttonDecalX=(buttonsAreaX-beamsThickness*2-1)/2;
 buttonDecalY=(bezel4x20Y-beamsThickness*2-nbButtons*buttonsHoleRadius*2)/(nbButtons+1);
 echo (buttonDecalY);
 
-diffuserCentralHoleR=8/2;
+diffuserCentralHoleR=7.2/2;
     diffuserCentralHoleR2=12/2;
     diffuserLedCompartmentDepth=2;
     diffuserWireChanelWidth=5.2;
@@ -165,7 +165,7 @@ module ledDiffuser()
     translate([buttonDecalX+1+diffuserCentralHoleR2+4,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1),boxWallsThickness-1])
             cylinder(r=1.05,r2=1.1,h=diffuserLedCompartmentDepth*4,$fn=32);
         
-    translate([buttonDecalX+1-diffuserWireChanelWidth/2,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1)-diffuserBaseX/2,diffuserButtonCylinderZ+diffuserButtonCylinderZ-1])    
+    translate([buttonDecalX+1-diffuserWireChanelWidth/2,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1)-diffuserBaseX/2,diffuserButtonCylinderZ+diffuserButtonCylinderZ-2])    
            cube([diffuserWireChanelWidth,diffuserBaseX+2,boxWallsThickness+1]);
             //translate([buttonDecalX+1-7/2,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1)-7/2,boxWallsThickness*2])
             //cube([7,7,boxWallsThickness+1]);
@@ -662,7 +662,7 @@ translate([bezel4x20X+buttonsAreaX-pillarsWidth1/2-boxWallsThickness,boxWallsThi
 //frontPanel();
 
 //rotate([180,0,0])
-ledDiffuser();
+//ledDiffuser();
 
 /*translate([0,diffuserBaseY+buttonDecalY/2+1,0]) 
 ledDiffuser();
@@ -680,8 +680,8 @@ ledDiffuserBackPlate();
 
 translate([0,diffuserBaseY*2+buttonDecalY+2,0]) 
 ledDiffuserBackPlate();
-
-buttonsHolderPlate1();*/
+*/
+buttonsHolderPlate1();
 
 //secondLayer();
 
