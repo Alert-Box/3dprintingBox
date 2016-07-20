@@ -802,11 +802,11 @@ difference()
 {
 union()
 {
-translate([boxWallsThickness+66,boxWallsThickness+6,boxPart1Z+boxWallsThickness+5]) 
-piZeroSimplePlate();
-    /*
-translate([boxWallsThickness+66,boxWallsThickness+6+piZeroShortSide+5,boxPart1Z+boxWallsThickness+5]) 
+/*translate([boxWallsThickness+66,boxWallsThickness+12,boxPart1Z+boxWallsThickness+5]) 
 piZeroSimplePlate();*/
+    
+translate([boxWallsThickness+66,boxWallsThickness+6+piZeroShortSide+5,boxPart1Z+boxWallsThickness+5]) 
+piZeroSimplePlate();
 
 translate([(bezel4x20X+buttonsAreaX)/2-boxWallsThickness+pillarsWidth1,boxWallsThickness+boxInternalPadding,boxPart1Z+boxWallsThickness+5])
 {
