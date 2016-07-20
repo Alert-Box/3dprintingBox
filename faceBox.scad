@@ -3,6 +3,8 @@ use<../../parts/rpiPlateCompact1.scad>
 
 
 
+
+
 //bezel4x20X=110;
 bezel4x20Y=80;
 
@@ -30,8 +32,9 @@ battBoxWalls2Height=30;
 fixationBeamsThickness=5;
 fixationBeamsHolesRadius=3/2;
 
+/*
 pcbX=40;
-pcbY=60;
+pcbY=60;*/
 
 pcbHolesDistFromEdge=2;
 
@@ -45,7 +48,20 @@ screwHolesRadius=2/2;
 padding=0.1;
 
 buttonPlatePillarsHeight=8;
-    
+
+alertBoxExternalX=bezel4x20X+buttonsAreaX-0.5;
+alertBoxInternalX1=alertBoxExternalX-boxWallsThickness*2;
+alertBoxInternalX2=alertBoxInternalX1-pillarsWidth1*2;
+
+alertBoxExternalY=bezel4x20Y;
+alertBoxInternalY1=alertBoxExternalY-boxWallsThickness*2;
+alertBoxInternalY2=alertBoxInternalY1-pillarsWidth1*2;
+
+boxInternalPadding=0.5;
+
+
+
+
 
 nbButtons=3;
 buttonDecalX=(buttonsAreaX-beamsThickness*2-1)/2;
@@ -64,6 +80,103 @@ diffuserCentralHoleR=7.2/2;
     diffuserBackPlateFootX=5;
     diffuserBackPlateFootY=diffuserBaseY;
     diffuserBackPlateFootZ=6;
+    
+    
+    piZeroHolesDistFromEdge=3.5;
+    piZeroHolesRadius=2.75/2;
+    
+    piZeroLongSideHolesDist=58;
+    piZeroShortSideHolesDist=23;
+    
+    piZeroLongSide=65;
+    piZeroShortSide=30;
+    
+    
+    
+    module genericStandoff(holeRadius=3/2,standoffThickness=1,footHeight=3,footMultiplier=1.3,standoffTotalHeight=6,baseFootThickness=0,fn=32)
+    {
+        difference()
+        {
+        union()
+        {
+            translate([0,0,baseFootThickness])
+            {
+            cylinder(r1=(holeRadius+standoffThickness)*footMultiplier, r2=(holeRadius+standoffThickness),h=footHeight,$fn=fn);
+            cylinder(r=(holeRadius+standoffThickness),h=standoffTotalHeight,$fn=fn);
+            }
+            if(baseFootThickness>0)
+            {
+                cylinder(r=(holeRadius+standoffThickness)*footMultiplier,h=baseFootThickness,$fn=fn);
+            }
+        }
+        translate([0,0,baseFootThickness])
+        cylinder(r=holeRadius,h=standoffTotalHeight+1,$fn=fn);
+    }
+        
+    }
+    
+    
+    //genericStandoff(baseFootThickness=3);
+    
+    
+    module genericSupportFrame(outerFrameX,outerFrameY,frameThickness=3,frameBracesCountX=2,frameBracesCountY=2,framebracesThickness=1)
+    {
+        cube([outerFrameX,frameThickness,frameThickness]);
+        cube([frameThickness,outerFrameY,frameThickness]);
+        translate([0,outerFrameY-frameThickness,0])
+            cube([outerFrameX,frameThickness,frameThickness]);
+        translate([outerFrameX-frameThickness,0,0])
+            cube([frameThickness,outerFrameY,frameThickness]);
+        
+        insideFrameFreeSpaceX=outerFrameX-(frameThickness*2)-frameBracesCountX*framebracesThickness;
+        bracesSpacingX=insideFrameFreeSpaceX/(frameBracesCountX+1);
+        
+        if(frameBracesCountX>0)
+        {
+            for (i =[1:frameBracesCountX])
+            {
+                translate([frameThickness+(bracesSpacingX)*i+framebracesThickness*(i-1),0,0])
+                    cube([framebracesThickness,outerFrameY,frameThickness]);
+            }
+        }
+        
+        insideFrameFreeSpaceY=outerFrameY-(frameThickness*2)-frameBracesCountY*framebracesThickness;
+        bracesSpacingY=insideFrameFreeSpaceY/(frameBracesCountY+1);
+        
+        if(frameBracesCountY>0)
+        {
+            for (i =[1:frameBracesCountY])
+            {
+                translate([0,frameThickness+(bracesSpacingY)*i+framebracesThickness*(i-1),0])
+                    cube([outerFrameX,framebracesThickness,frameThickness]);
+            }
+        }
+    }
+    
+    module piZeroSimplePlate(frameThickness1=3,frameBracesCountX1=2,frameBracesCountY1=2,framebracesThickness1=1)
+    {
+        genericSupportFrame(outerFrameX=piZeroLongSide,outerFrameY=piZeroShortSide,frameThickness=frameThickness1,frameBracesCountX=frameBracesCountX1,frameBracesCountY=frameBracesCountY1,framebracesThickness=framebracesThickness1);
+        
+        
+        
+        translate([piZeroHolesDistFromEdge,piZeroHolesDistFromEdge,0])
+        genericStandoff(baseFootThickness=frameThickness1);
+        
+        translate([piZeroHolesDistFromEdge,piZeroHolesDistFromEdge+piZeroShortSideHolesDist,0])
+        genericStandoff(baseFootThickness=frameThickness1);
+        
+        translate([piZeroHolesDistFromEdge+piZeroLongSideHolesDist,piZeroHolesDistFromEdge,0])
+        genericStandoff(baseFootThickness=frameThickness1);
+        
+        translate([piZeroHolesDistFromEdge+piZeroLongSideHolesDist,piZeroHolesDistFromEdge+piZeroShortSideHolesDist,0])
+        genericStandoff(baseFootThickness=frameThickness1);
+    }
+
+    //genericSupportFrame(outerFrameX=60,outerFrameY=30);
+    
+
+
+
 
 
 
@@ -96,7 +209,7 @@ module openBasePlate(x,y,nbBeamsX=3,nbBeamsY=2)
 			cube([x+beamsThickness,beamsThickness,beamsThickness]);
 	}
 }
-module motorBracketHole(h0=battBoxWallsHeight-beamsThickness,shift=beamsThickness,r0=screwHolesRadius) 
+module motorBracketHole(h0=boxPart1Z-beamsThickness,shift=beamsThickness,r0=screwHolesRadius) 
 {
 	translate([0,0,padding+shift]) 
 	{
@@ -107,7 +220,7 @@ module motorBracketHole(h0=battBoxWallsHeight-beamsThickness,shift=beamsThicknes
 module circuit1Plate()
 {
 
-	openBasePlate(circuit1X,circuit1Y,2,2);
+	openBasePlate(circuit1X,circuit1Y,1,1);
 
 	translate([beamsThickness+circuit1ScrewsDistFromEdge,beamsThickness+circuit1ScrewsDistFromEdge,0])
 		difference()
@@ -184,7 +297,13 @@ module ledDiffuserBackPlate()
         {
         translate([2,pillarsWidth1+beamsThickness+0.5,diffuserButtonCylinderZ+diffuserBaseThickness])
         //#cube([buttonsAreaX-1-5,bezel4x20Y-pillarsWidth1*2-boxWallsThickness*2-1,boxWallsThickness*2]);
-    cube([diffuserBaseX,diffuserBaseY,diffuserBaseThickness]);      
+    cube([diffuserBaseX,diffuserBaseY,diffuserBaseThickness]); 
+       
+       translate([buttonDecalX+1,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1),diffuserButtonCylinderZ+1])
+            cylinder(r=diffuserCentralHoleR2,h=diffuserBaseThickness+0.5,$fn=32); 
+        
+        translate([buttonDecalX+1-diffuserWireChanelWidth/2,beamsThickness+buttonDecalY*1+buttonsHoleRadius+buttonsHoleRadius*2*(1-1)-diffuserBaseX/2,diffuserButtonCylinderZ+diffuserButtonCylinderZ-2])    
+           cube([diffuserWireChanelWidth,diffuserBaseX+2,boxWallsThickness+1]);    
             
             
             
@@ -388,7 +507,7 @@ module secondLayerNoHoles(layerHeight=boxPart2Z)
             fixationPillar(pillarHeight=5);
             
             //circuit plate
-            translate([12.5,3,boxWallsThickness])
+            translate([12.5,3,0])
             circuit1Plate();
         }
     }
@@ -647,12 +766,6 @@ translate([bezel4x20X+buttonsAreaX-pillarsWidth1/2-boxWallsThickness,bezel4x20Y-
 translate([bezel4x20X+buttonsAreaX-pillarsWidth1/2-boxWallsThickness,boxWallsThickness+pillarsWidth1/2,boxWallsThickness])    
     cylinder(r=screwHoles1Radius,h=25,$fn=10);
 }
-    
-    
-    
-    
-    
-    
     }
     
 }
@@ -681,10 +794,49 @@ ledDiffuserBackPlate();
 translate([0,diffuserBaseY*2+buttonDecalY+2,0]) 
 ledDiffuserBackPlate();
 */
-buttonsHolderPlate1();
+//buttonsHolderPlate1();
 
 //secondLayer();
 
+difference()
+{
+union()
+{
+translate([boxWallsThickness+66,boxWallsThickness+6,boxPart1Z+boxWallsThickness+5]) 
+piZeroSimplePlate();
+    /*
+translate([boxWallsThickness+66,boxWallsThickness+6+piZeroShortSide+5,boxPart1Z+boxWallsThickness+5]) 
+piZeroSimplePlate();*/
+
+translate([(bezel4x20X+buttonsAreaX)/2-boxWallsThickness+pillarsWidth1,boxWallsThickness+boxInternalPadding,boxPart1Z+boxWallsThickness+5])
+{
+        cube([5,alertBoxInternalY1-boxInternalPadding*2,3]);
+
+}
+
+translate([bezel4x20X+buttonsAreaX-pillarsWidth1*3-boxWallsThickness,boxWallsThickness+boxInternalPadding,boxPart1Z+boxWallsThickness+5])
+{
+        cube([5,alertBoxInternalY1-boxInternalPadding*2,3]);
+
+}
+}
+
+translate([0,0,boxPart1Z+boxWallsThickness+5])
+{
+//middle holes, small pillars
+                   translate([(bezel4x20X+buttonsAreaX)/2-pillarsWidth1/2+pillarsWidth1-boxWallsThickness+pillarsWidth1,bezel4x20Y-pillarsWidth1/2-boxWallsThickness,-1])
+            cylinder(r=screwHoles1Radius,h=holes001Depth,$fn=12);
+
+        translate([(bezel4x20X+buttonsAreaX)/2-pillarsWidth1/2+pillarsWidth1-boxWallsThickness+pillarsWidth1,boxWallsThickness+pillarsWidth1/2,-1])
+            cylinder(r=screwHoles1Radius,h=holes001Depth,$fn=12);
+    
+    translate([bezel4x20X-pillarsWidth1*2.5-boxWallsThickness+buttonsAreaX,bezel4x20Y-pillarsWidth1/2-boxWallsThickness,-1])    
+            cylinder(r=screwHoles1Radius,h=holes001Depth,$fn=12);
+        translate([bezel4x20X+buttonsAreaX-pillarsWidth1*2.5-boxWallsThickness,boxWallsThickness+pillarsWidth1/2,-1])    
+            cylinder(r=screwHoles1Radius,h=holes001Depth,$fn=12);
+    
+}
+}
 //thirdLayer();
 //spacerLayer();
 
