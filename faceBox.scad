@@ -213,7 +213,7 @@ module motorBracketHole(h0=boxPart1Z-beamsThickness,shift=beamsThickness,r0=scre
 {
 	translate([0,0,padding+shift]) 
 	{
-    	cylinder(r=r0, h0+padding, center = false,$fn=32);
+    	cylinder(r=3.1/2, h0+padding, center = false,$fn=32);
 	}
 }
 
@@ -221,34 +221,36 @@ module circuit1Plate()
 {
 
 	openBasePlate(circuit1X,circuit1Y,1,1);
+    
+    rrr0=3;
 
 	translate([beamsThickness+circuit1ScrewsDistFromEdge,beamsThickness+circuit1ScrewsDistFromEdge,0])
 		difference()
 		{
-			cylinder(r=beamsThickness,h=circuit1ScrewPillarsH,$fn=32);
+			cylinder(r=rrr0,h=circuit1ScrewPillarsH,$fn=32);
 			motorBracketHole();
 		}
 
 	translate([beamsThickness+circuit1ScrewsDistFromEdge,circuit1Y-circuit1ScrewsDistFromEdge,0])
 		difference()
 		{
-			cylinder(r=beamsThickness,h=circuit1ScrewPillarsH,$fn=32);
+			cylinder(r=rrr0,h=circuit1ScrewPillarsH,$fn=32);
 			motorBracketHole();
 		}
 
 	translate([circuit1X-circuit1ScrewsDistFromEdge,beamsThickness+circuit1ScrewsDistFromEdge,0])
 		difference()
 		{
-			cylinder(r=beamsThickness,h=circuit1ScrewPillarsH,$fn=32);
+			cylinder(r=rrr0,h=circuit1ScrewPillarsH,$fn=32);
 			motorBracketHole();
 		}
 
 	translate([circuit1X-circuit1ScrewsDistFromEdge,circuit1Y-circuit1ScrewsDistFromEdge,0])
 		difference()
 		{
-			cylinder(r=beamsThickness,h=circuit1ScrewPillarsH,$fn=32);
+			cylinder(r=rrr0,h=circuit1ScrewPillarsH,$fn=32);
 			motorBracketHole();
-		}		
+		}
 }
 
 
@@ -796,14 +798,17 @@ ledDiffuserBackPlate();
 */
 //buttonsHolderPlate1();
 
-//secondLayer();
+//goes down bellow, or delete
+/*translate([boxWallsThickness+66,boxWallsThickness+12,boxPart1Z+boxWallsThickness+5]) 
+piZeroSimplePlate();*/
 
+secondLayer();
+/*
 difference()
 {
 union()
 {
-/*translate([boxWallsThickness+66,boxWallsThickness+12,boxPart1Z+boxWallsThickness+5]) 
-piZeroSimplePlate();*/
+//goes here
     
 translate([boxWallsThickness+66,boxWallsThickness+6+piZeroShortSide+5,boxPart1Z+boxWallsThickness+5]) 
 piZeroSimplePlate();
@@ -837,6 +842,8 @@ translate([0,0,boxPart1Z+boxWallsThickness+5])
     
 }
 }
+
+*/
 //thirdLayer();
 //spacerLayer();
 
